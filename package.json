@@ -1,0 +1,29 @@
+{
+  "name": "nab-test-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jjbang/nab-test-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jjbang/nab-test-server/issues"
+  },
+  "homepage": "https://github.com/jjbang/nab-test-server#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "moment-timezone": "^0.6.0",
+    "morgan": "^1.10.0",
+    "path": "^0.12.7",
+    "winston": "^3.17.0"
+  }
+}
