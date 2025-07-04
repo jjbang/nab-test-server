@@ -5,5 +5,6 @@ const memberController = require("./../controllers/member");
 router.get("/list", helper.verifyToken, memberController.getMemberList);
 router.post("/addedit", helper.verifyToken, memberController.createMember);
 router.delete("/:id", helper.verifyToken, memberController.deleteMemberById);
+router.get("/:id", helper.verifyToken, memberController.getMemberById);
 
 module.exports = router;
