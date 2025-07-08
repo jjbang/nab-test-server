@@ -24,6 +24,10 @@ app.use(morganMiddleware);
 app.use(require("./routes"));
 app.use(errorHandler);
 
+app.get("/", (req, res) => {
+  return res.json({});
+});
+
 app.listen(app.get("port"), () => {
   logger.debug(`App is running at http://localhost:${app.get("port")}`);
   logger.debug("Press CTRL-C to stop\n");
