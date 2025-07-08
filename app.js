@@ -18,7 +18,7 @@ const logger = require("./lib/logger");
 
 const app = express();
 
-app.set("port", process.env.SERVER_PORT || 4000);
+app.set("port", process.env.PORT || 4000);
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
 app.use(cors());
