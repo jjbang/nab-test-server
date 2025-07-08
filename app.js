@@ -5,9 +5,11 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 // LOAD CONFIG FIRST
-const result = dotenv.config({ path: path.join(__dirname, ".env") });
-if (result.error) {
-  throw result.error;
+if (process.env.NODE_ENV !== "production") {
+  const result = dotenv.config({ path: path.join(__dirname, ".env") });
+  if (result.error) {
+    throw result.error;
+  }
 }
 
 const { errorHandler } = require("./middlewares");
