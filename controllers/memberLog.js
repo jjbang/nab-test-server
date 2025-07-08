@@ -15,6 +15,7 @@ exports.getMemberLogList = async (req, res) => {
         door_name: "Lane 1 - IN",
         access_event_type: "TIME_IN", // TIME_IN, TIME_OUT
         access_method_type: "FACE", // QR, CARD, FACE
+        access_data: "123123213213",
         access_time: "2025-06-24T17:16:09",
       },
     ],
