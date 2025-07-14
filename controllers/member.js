@@ -106,134 +106,151 @@ exports.createMember = (req, res, next) => {
         profile_img_data,
       } = mem;
 
-      let isCreate = false;
-      if (!(parseInt(id) > 0)) {
-        // Is create
-        isCreate = true;
-        createdMemberIds.push(id);
-      } else {
+      let baseMessage = "Creating New Member";
+      if (parseInt(id) > 0) {
         if (!memberIdsObj[`${id}`]) {
           return res.status(400).json({
-            message: `Member with id ${id} does not exist for update`,
+            message: `Member ID ${id} does not exist for update`,
           });
+        } else {
+          baseMessage = `Member ID ${id}`;
         }
-        updatedMemberIds.push(id);
       }
 
       if (work_start_date) {
         if (!isValidDate(work_start_date)) {
           return res.status(400).json({
-            message: `Member ID ${id}: Invalid work start date ${work_start_date}`,
+            message: `${baseMessage}: Invalid work start date ${work_start_date}`,
           });
         }
       }
       if (work_end_date) {
         if (!isValidDate(work_end_date)) {
           return res.status(400).json({
-            message: `Member ID ${id}: Invalid work end date ${work_end_date}`,
+            message: `${baseMessage}: Invalid work end date ${work_end_date}`,
           });
         }
       }
       if (access_valid_start) {
         if (!isValidDateMinutes(access_valid_start)) {
           return res.status(400).json({
-            message: `Member ID ${id}: Invalid access valid start date ${access_valid_start}`,
+            message: `${baseMessage}: Invalid access valid start date ${access_valid_start}`,
           });
         }
       }
       if (access_valid_end) {
         if (!isValidDateMinutes(access_valid_end)) {
           return res.status(400).json({
-            message: `Member ID ${id}: Invalid access valid end date ${access_valid_end}`,
+            message: `${baseMessage}: Invalid access valid end date ${access_valid_end}`,
           });
         }
       }
       if (access_doorgroup_ids) {
         if (!Array.isArray(access_doorgroup_ids)) {
           return res.status(400).json({
-            message: `Member ID ${id}: Invalid access_doorgroup_ids should be a list of doorgroup ids`,
+            message: `${baseMessage}: Invalid access_doorgroup_ids should be a list of doorgroup ids`,
           });
         }
         for (const dg of access_doorgroup_ids) {
           if (!(dg >= 1 && dg <= 4)) {
             return res.status(400).json({
-              message: `Member ID ${id}: Invalid access_doorgroup_ids for id ${dg}`,
+              message: `${baseMessage}: Invalid access_doorgroup_ids for id ${dg}`,
             });
           }
         }
       }
       if (!isNullOrString(full_name)) {
         return res.status(400).json({
-          message: `Member ID ${id}: Type of full_name should be string or null`,
+          message: `${baseMessage}: Type of full_name should be string or null`,
         });
       }
       if (!isNullOrString(position)) {
         return res.status(400).json({
-          message: `Member ID ${id}: Type of position should be string or null`,
+          message: `${baseMessage}: Type of position should be string or null`,
         });
       }
       if (!isNullOrString(email)) {
         return res.status(400).json({
-          message: `Member ID ${id}: Type of email should be string or null`,
+          message: `${baseMessage}: Type of email should be string or null`,
         });
       }
       if (!isNullOrString(gender)) {
         return res.status(400).json({
-          message: `Member ID ${id}: Type of gender should be string or null`,
+          message: `${baseMessage}: Type of gender should be string or null`,
         });
       }
       if (gender && !(gender === "MALE" || gender === "FEMALE")) {
         return res.status(400).json({
-          message: `Member ID ${id}: Value of gender should MALE or FEMALE`,
+          message: `${baseMessage}: Value of gender should MALE or FEMALE`,
         });
       }
       if (!isNullOrString(emp_no)) {
         return res.status(400).json({
-          message: `Member ID ${id}: Type of emp_no should be string or null`,
+          message: `${baseMessage}: Type of emp_no should be string or null`,
         });
       }
       if (!isNullOrString(national_no)) {
         return res.status(400).json({
-          message: `Member ID ${id}: Type of national_no should be string or null`,
+          message: `${baseMessage}: Type of national_no should be string or null`,
         });
       }
       if (!isNullOrString(department_name)) {
         return res.status(400).json({
-          message: `Member ID ${id}: Type of department_name should be string or null`,
+          message: `${baseMessage}: Type of department_name should be string or null`,
         });
       }
       if (!isNullOrString(mobile_no)) {
         return res.status(400).json({
-          message: `Member ID ${id}: Type of mobile_no should be string or null`,
+          message: `${baseMessage}: Type of mobile_no should be string or null`,
         });
       }
       if (!isNullOrString(access_card_uid)) {
         return res.status(400).json({
-          message: `Member ID ${id}: Type of access_card_uid should be string or null`,
+          message: `${baseMessage}: Type of access_card_uid should be string or null`,
         });
       }
       if (!isNullOrString(access_uhf_uid)) {
         return res.status(400).json({
-          message: `Member ID ${id}: Type of access_uhf_uid should be string or null`,
+          message: `${baseMessage}: Type of access_uhf_uid should be string or null`,
         });
       }
       if (!isNullOrString(access_qr_data)) {
         return res.status(400).json({
-          message: `Member ID ${id}: Type of access_qr_data should be string or null`,
+          message: `${baseMessage}: Type of access_qr_data should be string or null`,
         });
       }
       if (!isNullOrString(profile_img_data)) {
         return res.status(400).json({
-          message: `Member ID ${id}: Type of profile_img_data should be string or null`,
+          message: `${baseMessage}: Type of profile_img_data should be string or null`,
         });
       }
+    }
 
-      if (memberIdsObj[`${id}`]) {
-        memberList = memberList.filter((mem) => {
-          return mem.id !== id;
-        });
-      }
-      if (isCreate) {
+    for (const mem of members) {
+      const {
+        id,
+        full_name,
+        position,
+        mobile_no,
+        email,
+        gender,
+        emp_no,
+        national_no,
+        department_name,
+        work_start_date,
+        work_end_date,
+        access_valid_start,
+        access_valid_end,
+        access_card_uid,
+        access_uhf_uid,
+        access_qr_data,
+        access_doorgroup_ids,
+        profile_img_data,
+      } = mem;
+
+      if (!(parseInt(id) > 0)) {
+        createdMemberIds.push(id);
+
         memberList = [
           {
             id: idIncrement,
@@ -261,6 +278,7 @@ exports.createMember = (req, res, next) => {
         ];
         idIncrement += 1;
       } else {
+        updatedMemberIds.push(id);
         let memberToUpdate = memberIdsObj[`${id}`];
         if (full_name) {
           memberToUpdate["full_name"] = full_name;
