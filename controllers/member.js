@@ -249,7 +249,7 @@ exports.createMember = (req, res, next) => {
       } = mem;
 
       if (!(parseInt(id) > 0)) {
-        createdMemberIds.push(id);
+        createdMemberIds.push(idIncrement);
 
         memberList = [
           {
