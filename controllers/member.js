@@ -1,7 +1,7 @@
 const logger = require("../lib/logger");
 const moment = require("moment-timezone");
 
-let id = 2;
+let idIncrement = 2;
 let memberList = [
   {
     id: 1, // Required
@@ -68,7 +68,7 @@ exports.createMember = (req, res, next) => {
     const { members } = req.body;
     const memberIdsObj = {};
     for (const mem of memberList) {
-      memberIdsObj[`${mem.id}`] = true;
+      memberIdsObj[`${mem.id}`] = mem;
     }
 
     if (!Array.isArray(members)) {
@@ -82,7 +82,8 @@ exports.createMember = (req, res, next) => {
         message: "Max 100 members can be added at one time",
       });
     }
-    const createdMemberids = [];
+    const createdMemberIds = [];
+    const updatedMemberIds = [];
     for (const mem of members) {
       const {
         id,
@@ -105,12 +106,19 @@ exports.createMember = (req, res, next) => {
         profile_img_data,
       } = mem;
 
+      let isCreate = false;
       if (!(parseInt(id) > 0)) {
-        return res.status(400).json({
-          message: "Valid Member ID is required",
-        });
+        // Is create
+        isCreate = true;
+        createdMemberIds.push(id);
+      } else {
+        if (!memberIdsObj[`${id}`]) {
+          return res.status(400).json({
+            message: `Member with id ${id} does not exist for update`,
+          });
+        }
+        updatedMemberIds.push(id);
       }
-      createdMemberids.push(id);
 
       if (work_start_date) {
         if (!isValidDate(work_start_date)) {
@@ -225,34 +233,91 @@ exports.createMember = (req, res, next) => {
           return mem.id !== id;
         });
       }
-      memberList = [
-        {
-          id,
-          full_name: full_name || null,
-          position: position || null,
-          mobile_no: mobile_no || null,
-          email: email || null,
-          gender: gender || null,
-          emp_no: emp_no || null,
-          national_no: national_no || null,
-          department_name: department_name || null,
-          work_start_date: work_start_date || null,
-          work_end_date: work_end_date || null,
-          access_valid_start: access_valid_start || null,
-          access_valid_end: access_valid_end || null,
-          access_card_uid: access_card_uid || null,
-          access_uhf_uid: access_uhf_uid || null,
-          access_qr_data: access_qr_data || null,
-          access_doorgroup_ids: access_doorgroup_ids || [],
-          profile_img_data: profile_img_data || null,
-          inserted_at: "2025-06-24T17:16:09",
-          updated_at: "2025-06-24T17:16:09",
-        },
-        ...memberList,
-      ];
+      if (isCreate) {
+        memberList = [
+          {
+            id: idIncrement,
+            full_name: full_name || null,
+            position: position || null,
+            mobile_no: mobile_no || null,
+            email: email || null,
+            gender: gender || null,
+            emp_no: emp_no || null,
+            national_no: national_no || null,
+            department_name: department_name || null,
+            work_start_date: work_start_date || null,
+            work_end_date: work_end_date || null,
+            access_valid_start: access_valid_start || null,
+            access_valid_end: access_valid_end || null,
+            access_card_uid: access_card_uid || null,
+            access_uhf_uid: access_uhf_uid || null,
+            access_qr_data: access_qr_data || null,
+            access_doorgroup_ids: access_doorgroup_ids || [],
+            profile_img_data: profile_img_data || null,
+            inserted_at: "2025-06-24T17:16:09",
+            updated_at: "2025-06-24T17:16:09",
+          },
+          ...memberList,
+        ];
+        idIncrement += 1;
+      } else {
+        let memberToUpdate = memberIdsObj[`${id}`];
+        if (full_name) {
+          memberToUpdate["full_name"] = full_name;
+        }
+        if (position) {
+          memberToUpdate["position"] = position;
+        }
+        if (mobile_no) {
+          memberToUpdate["mobile_no"] = mobile_no;
+        }
+        if (email) {
+          memberToUpdate["email"] = email;
+        }
+        if (gender) {
+          memberToUpdate["gender"] = gender;
+        }
+        if (emp_no) {
+          memberToUpdate["emp_no"] = emp_no;
+        }
+        if (national_no) {
+          memberToUpdate["national_no"] = national_no;
+        }
+        if (department_name) {
+          memberToUpdate["department_name"] = department_name;
+        }
+        if (work_start_date) {
+          memberToUpdate["work_start_date"] = work_start_date;
+        }
+        if (work_end_date) {
+          memberToUpdate["work_end_date"] = work_end_date;
+        }
+        if (access_valid_start) {
+          memberToUpdate["access_valid_start"] = access_valid_start;
+        }
+        if (access_valid_end) {
+          memberToUpdate["access_valid_end"] = access_valid_end;
+        }
+        if (access_card_uid) {
+          memberToUpdate["access_card_uid"] = access_card_uid;
+        }
+        if (access_uhf_uid) {
+          memberToUpdate["access_uhf_uid"] = access_uhf_uid;
+        }
+        if (access_qr_data) {
+          memberToUpdate["access_qr_data"] = access_qr_data;
+        }
+        if (access_doorgroup_ids) {
+          memberToUpdate["access_doorgroup_ids"] = access_doorgroup_ids;
+        }
+        if (profile_img_data) {
+          memberToUpdate["profile_img_data"] = profile_img_data;
+        }
+      }
     }
     return res.status(200).json({
-      ids: createdMemberids,
+      created_ids: createdMemberIds,
+      updated_ids: updatedMemberIds,
     });
   } catch (e) {
     res.status(500).send({
